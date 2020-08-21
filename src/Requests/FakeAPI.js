@@ -1,55 +1,37 @@
 const defaultRequests = [
     {
         requestId: 0,
-        dateTime: String(new Date()),
+        dateTime: new Date(),
         companyName: "Apricode",
-        carrier: "Tarbeev A.V.",
+        carrier: 3,
         carrierPhoneNumber: "8(800)555-35-35",
-        comment: "Lorem Ipsum is simply dummy text of the printing and typesetting industry." +
-            " Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, " +
-            "when an unknown printer took a galley of type and scrambled it to make a type specimen book. " +
-            "It has survived not only five centuries, but also the leap into electronic typesetting, remaining " +
-            "essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing" +
-            " Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including" +
-            " versions of Lorem Ipsum.",
+        comment: "Lorem ",
         atiCode: "12345"
     },
     {
         requestId: 1,
-        dateTime: String(new Date()),
+        dateTime: new Date(),
         companyName: "Apricode",
-        carrier: "Tarbeev A.V.",
+        carrier: 2,
         carrierPhoneNumber: "8(800)555-35-35",
-        comment: "Lorem Ipsum is simply dummy text of the printing and typesetting industry." +
-            " Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, " +
-            "when an unknown printer took a galley of type and scrambled it to make a type specimen book. " +
-            "It has survived not only five centuries, but also the leap into electronic typesetting, remaining " +
-            "essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing" +
-            " Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including" +
-            " versions of Lorem Ipsum.",
+        comment: "Lorem ",
         atiCode: "12345"
     },
     {
         requestId: 2,
-        dateTime: String(new Date()),
+        dateTime: new Date(),
         companyName: "Apricode",
-        carrier: "Tarbeev A.V.",
+        carrier: 1,
         carrierPhoneNumber: "8(800)555-35-35",
-        comment: "Lorem Ipsum is simply dummy text of the printing and typesetting industry." +
-            " Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, " +
-            "when an unknown printer took a galley of type and scrambled it to make a type specimen book. " +
-            "It has survived not only five centuries, but also the leap into electronic typesetting, remaining " +
-            "essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing" +
-            " Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including" +
-            " versions of Lorem Ipsum.",
+        comment: "Lorem ",
         atiCode: "12345"
     }
 ]
 
 const defaultCarriers = [
-    { name: "Tarbeev A.V", phoneNumber: "8(800)555-35-35" },
-    { name: "Tarbeev A.V", phoneNumber: "8(800)555-35-35" },
-    { name: "Tarbeev A.V", phoneNumber: "8(800)555-35-35" },
+    {id: 1, name: "Tarbe"},
+    {id: 2, name: "Tarbeev A.V"},
+    {id: 3, name: "Tarbeeeeeev A.V"},
 ]
 
 class FakeAPI {
@@ -58,36 +40,60 @@ class FakeAPI {
     * */
     requests = [];
     carriers = [];
+    _maxRequestId;
 
+    get maxRequestId() {
+        return this._maxRequestId;
+    }
 
-    constructor(requests = defaultRequests, carriers = defaultCarriers) {
+    set maxRequestId(value) {
+        this._maxRequestId = value;
+    }
+
+    getNextId() {
+        this.maxRequestId += 1;
+        return this.maxRequestId;
+    }
+
+    constructor(requests = defaultRequests, carriers = defaultCarriers, maxRequestId = 0) {
         this.requests = requests;
         this.carriers = carriers;
+        this.maxRequestId = maxRequestId;
     }
 
     getCarriers = () => {
-        return this.carriers;
+        return JSON.stringify(
+            this.carriers.reduce((acc, cur) => {
+                acc[cur.id] = cur.name;
+                return acc;
+            }, {})
+        );
     }
 
     getRequests = () => {
-        return this.requests;
+        return JSON.stringify(this.requests);
     }
 
     getRequest = (id) => {
-        return this.requests[id];
+        return JSON.stringify(this.requests[id]);
     }
 
     postRequest = (newRequest) => {
-        this.requests.push(newRequest);
+        const newRequestCopy = {...newRequest};
+        newRequestCopy.requestId = this.getNextId();
+        this.requests.push(newRequestCopy);
+        return JSON.stringify(this.requests);
     }
 
     editRequest = (id, request) => {
         this.requests[id] = request;
+        return JSON.stringify(this.requests);
     }
 
     deleteRequest = (id) => {
         this.requests.splice(id, 1);
+        return JSON.stringify(this.requests);
     }
 }
 
-export const fakeApi = new FakeAPI();
+export const fakeApi = new FakeAPI(defaultRequests, defaultCarriers, 2);
