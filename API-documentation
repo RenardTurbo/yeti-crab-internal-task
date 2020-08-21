@@ -1,0 +1,53 @@
+API:  request - заявка
+1)Requests :
+url:"/api/requests", method:"GET" - получение всех заявок на грузоперевозки
+response:[{
+            requestId:number,
+            dateTime:string,
+            companyName:string,
+            carrier:string,
+            carrierPhoneNumber:string,
+            comment:string,
+            atiCode:string
+}]
+2)Request :
+url:"/api/request?id=",
+method: "GET" - получение конкеретной заявки
+method: "PUT" - изменение конкретной заявки
+method: "DELETE" - удаление конкретной заявки
+body:{
+            dateTime:string,
+            companyName:string,
+            carrier:string,
+            carrierPhoneNumber:string,
+            comment:string,
+            atiCode:string
+}
+response:[{
+            requestId:number,
+            dateTime:string,
+            companyName:string,
+            carrier:string,
+            carrierPhoneNumber:string,
+            comment:string,
+            atiCode:string
+}]
+url:"/api/request"
+method:"POST" - добавление заявки
+body:{
+            dateTime:string,
+            companyName:string,
+            carrier:string,
+            carrierPhoneNumber:string,
+            comment:string,
+            atiCode:string
+}
+response:[{
+            requestId:number,
+            dateTime:string,
+            companyName:string,
+            carrier:string,
+            carrierPhoneNumber:string,
+            comment:string,
+            atiCode:string
+}]
